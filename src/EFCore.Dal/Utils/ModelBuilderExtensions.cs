@@ -12,6 +12,7 @@ namespace EFCore.Dal.Utils
               {
                   Id = 1,
                   Name = "JB",
+                  Password = "123456!@#$%^",
                   Phone = "0912345678",
                   CardNo = "XXXX-YYYY-1234-5678"
               });
@@ -21,6 +22,7 @@ namespace EFCore.Dal.Utils
               {
                   Id = 2,
                   Name = "Amy",
+                  Password = "123456!@#$%^",
                   Phone = "0933333333",
                   CardNo = "1234-5678-ZZZZ-WWWW"
               });

@@ -14,3 +14,15 @@ $ dotnet ef  --project ../EFCore.Dal --startup-project . migrations add InitCrea
 ```s
 $ dotnet ef  --project ../EFCore.Dal --startup-project . database update
 ```
+
+## DB query
+
+```sql
+SELECT
+"Id",
+"Name",
+"Password",
+my_sym_decrypt("Phone") as Phone,
+my_sym_decrypt("CardNo") as CardNo 
+FROM public."Users"
+```
