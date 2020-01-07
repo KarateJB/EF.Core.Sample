@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Dal
 {
-    public class MyDbContext: DbContext
+    public class MyDbContext : DbContext
     {
         private readonly DbContextOptions<MyDbContext> options = null;
 
@@ -97,9 +97,14 @@ namespace EFCore.Dal
 
         private string DecryptMe(byte[] cipher)
         {
-            using (var dbContext = new MyDbContext(this.options))
+            var connectionstring = "Server=jb.com;Port=5432;Database=Demo;User Id=postgres;Password=1qaz2wsx!;";
+            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+            optionsBuilder.UseNpgsql(connectionstring);
+
+            using (var dbContext = new MyDbContext(optionsBuilder.Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
+
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "my_sym_decrypt";
                 command.Parameters.Add(
