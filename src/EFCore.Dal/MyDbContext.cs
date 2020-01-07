@@ -3,16 +3,27 @@ using System.Data;
 using EFCore.Dal.Models;
 using EFCore.Dal.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EFCore.Dal
 {
     public class MyDbContext : DbContext
     {
         private readonly DbContextOptions<MyDbContext> options = null;
+        private readonly AppSettings appSettings = null;
 
-        public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
+        public MyDbContext(
+            DbContextOptions<MyDbContext> options) : base(options)
         {
             this.options = options;
+        }
+
+        public MyDbContext(
+            DbContextOptions<MyDbContext> options,
+             IOptions<AppSettings> configuration) : base(options)
+        {
+            this.options = options;
+            this.appSettings = configuration.Value;
         }
 
         public DbSet<User> Users { get; set; }
@@ -97,9 +108,9 @@ namespace EFCore.Dal
 
         private string DecryptMe(byte[] cipher)
         {
-            var connectionstring = "Server=jb.com;Port=5432;Database=Demo;User Id=postgres;Password=1qaz2wsx!;";
+            //var connectionstring = "Server=jb.com;Port=5432;Database=Demo;User Id=postgres;Password=1qaz2wsx!;";
             var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
-            optionsBuilder.UseNpgsql(connectionstring);
+            optionsBuilder.UseNpgsql(this.appSettings.ConnectionStrings.DB);
 
             using (var dbContext = new MyDbContext(optionsBuilder.Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
