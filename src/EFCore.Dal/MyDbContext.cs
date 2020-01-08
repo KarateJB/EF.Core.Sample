@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using EFCore.Core.Models;
+using EFCore.Core.Utils;
 using EFCore.Dal.Models;
 using EFCore.Dal.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -72,7 +73,10 @@ namespace EFCore.Dal
 
         private string HashIt(string text)
         {
-            using (var dbContext = new MyDbContext(this.options))
+            // You can use DbContextFactory to create the new DbContext as well
+            // var dbContext = DbContextFactory.Create(ConstFactory.DbConetextName);
+
+            using (var dbContext = new MyDbContext(this.getOptionBuilder().Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -91,7 +95,10 @@ namespace EFCore.Dal
 
         private byte[] EncryptMe(string text)
         {
-            using (var dbContext = new MyDbContext(this.options))
+            // You can use DbContextFactory to create the new DbContext as well
+            // var dbContext = DbContextFactory.Create(ConstFactory.DbConetextName);
+
+            using (var dbContext = new MyDbContext(this.getOptionBuilder().Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -110,14 +117,12 @@ namespace EFCore.Dal
 
         private string DecryptMe(byte[] cipher)
         {
-            var connectionstring = "Server=jb.com;Port=5432;Database=Demo;User Id=postgres;Password=1qaz2wsx!;";
-            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
-            optionsBuilder.UseNpgsql(connectionstring);
+            // You can use DbContextFactory to create the new DbContext as well
+            // var dbContext = DbContextFactory.Create(ConstFactory.DbConetextName);
 
-            using (var dbContext = new MyDbContext(optionsBuilder.Options))
+            using (var dbContext = new MyDbContext(this.getOptionBuilder().Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
-
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "my_sym_decrypt";
                 command.Parameters.Add(
@@ -130,6 +135,14 @@ namespace EFCore.Dal
                 var decrypted = (string)command.ExecuteScalar();
                 return decrypted;
             }
+        }
+
+        private DbContextOptionsBuilder<MyDbContext> getOptionBuilder()
+        {
+            var connectionString = this.appSettings.ConnectionStrings.DB;
+            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+            optionsBuilder.UseNpgsql(connectionString);
+            return optionsBuilder;
         }
     }
 }
