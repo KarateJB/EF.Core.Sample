@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using EFCore.Core.Models;
 using EFCore.Dal.Models;
 using EFCore.Dal.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,7 @@ namespace EFCore.Dal
                 val => this.EncryptMe(val),
                 val => this.DecryptMe(val));
 
+            // This code wont work!
             ////modelBuilder.Entity<Receipt>().Property(p => p.CardNo).HasConversion(
             ////   val => MiniTisContext.DbSymEncrypt(val),
             ////   val => MiniTisContext.DbSymDecrypt(val));
@@ -108,9 +110,9 @@ namespace EFCore.Dal
 
         private string DecryptMe(byte[] cipher)
         {
-            //var connectionstring = "Server=jb.com;Port=5432;Database=Demo;User Id=postgres;Password=1qaz2wsx!;";
+            var connectionstring = "Server=jb.com;Port=5432;Database=Demo;User Id=postgres;Password=1qaz2wsx!;";
             var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
-            optionsBuilder.UseNpgsql(this.appSettings.ConnectionStrings.DB);
+            optionsBuilder.UseNpgsql(connectionstring);
 
             using (var dbContext = new MyDbContext(optionsBuilder.Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())

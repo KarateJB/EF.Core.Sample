@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EFCore.Ap.Models
+namespace EFCore.Core.Models
 {
     /// <summary>
     /// AppSettings

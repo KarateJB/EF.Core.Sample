@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Ap.Models;
+using EFCore.Core.Models;
 using EFCore.Dal;
 using EFCore.Dal.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EFCore.Ap.Controllers
 {
@@ -15,7 +14,7 @@ namespace EFCore.Ap.Controllers
     public class DemoController : ControllerBase
     {
         private readonly MyDbContext dbcontext = null;
-        public DemoController(MyDbContext dbcontext)
+        public DemoController(MyDbContext dbcontext, IOptions<AppSettings> configuration)
         {
             this.dbcontext = dbcontext;
         }

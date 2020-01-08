@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCore.Dal\EFCore.Dal.csproj" />
+    <ProjectReference Include="..\EFCore.Core\EFCore.Core.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
