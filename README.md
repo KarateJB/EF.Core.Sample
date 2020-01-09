@@ -12,6 +12,7 @@ $ dotnet ef  --project ../EFCore.Dal --startup-project . migrations add InitCrea
 2. Update database
 
 ```s
+$ cd src/EFCore.Ap
 $ dotnet ef  --project ../EFCore.Dal --startup-project . database update
 ```
 

@@ -1,4 +1,5 @@
-﻿using EFCore.Dal.Models;
+﻿using System;
+using EFCore.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Dal.Utils
@@ -10,7 +11,7 @@ namespace EFCore.Dal.Utils
             modelBuilder.Entity<User>()
               .HasData(new User
               {
-                  Id = 1,
+                  Id = new Guid("ce32bd49-7a7c-4bd1-b2b9-7e960ad86306"),
                   Name = "JB",
                   Password = "123456!@#$%^",
                   Phone = "0912345678",
@@ -20,7 +21,7 @@ namespace EFCore.Dal.Utils
             modelBuilder.Entity<User>()
               .HasData(new User
               {
-                  Id = 2,
+                  Id = new Guid("3e177c71-f84e-4c23-9bf4-b322b350c8b2"),
                   Name = "Amy",
                   Password = "123456!@#$%^",
                   Phone = "0933333333",

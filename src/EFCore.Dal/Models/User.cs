@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFCore.Dal.Models
@@ -7,8 +8,9 @@ namespace EFCore.Dal.Models
     public class User
     {
         [Key]
+        [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Column(TypeName = "varchar(48)")]
         public string Name  { get; set; }
@@ -20,5 +22,8 @@ namespace EFCore.Dal.Models
 
         [Column(TypeName = "bytea")]
         public string CardNo { get; set; }
+
+        [Column(TypeName = "bytea")]
+        public byte[] Secret { get; set; } // This column wont apply Value Conversions
     }
 }

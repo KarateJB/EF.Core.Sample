@@ -46,17 +46,17 @@ namespace EFCore.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Password hash
+            // Hash Password
             modelBuilder.Entity<User>().Property(p => p.Password).HasConversion(
                 val => this.HashIt(val),
                 val => val);
 
-            // Encrypt / Decrypt Recipts: Phone
+            // Encrypt/Decrypt Phone
             modelBuilder.Entity<User>().Property(p => p.Phone).HasConversion(
                 val => this.EncryptMe(val),
                 val => this.DecryptMe(val));
 
-            // Encrypt / Decrypt Recipts: CardNo
+            // Encrypt/Decrypt CardNo
             // Notice that we cannot use the static method like "DbSymEncrypt" here
             modelBuilder.Entity<User>().Property(p => p.CardNo).HasConversion(
                 val => this.EncryptMe(val),
