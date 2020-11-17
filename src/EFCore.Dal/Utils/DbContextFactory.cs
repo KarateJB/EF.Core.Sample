@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using EFCore.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,19 @@ namespace EFCore.Dal.Utils
     /// </summary>
     public static class DbContextFactory
     {
-        private static readonly object enqueueLock;
+        private static readonly object enqueueLock = new object();
         private static ConcurrentQueue<MyDbContext> dbContextQueue = null;
 
         public static int MaxConnections { get; private set; } = 0; // Max preserved connections
         public static Dictionary<string, string> ConnectionStrings { get; private set; } // Connection string store
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        static DbContextFactory()
+        {
+            dbContextQueue = new ConcurrentQueue<MyDbContext>();
+        }
 
         /// <summary>
         /// Intialize the configurations
@@ -40,10 +49,13 @@ namespace EFCore.Dal.Utils
                 if (dbContextQueue.Count < MaxConnections)
                 {
                     dbContextQueue.Enqueue(dbContext);
+                    Debug.WriteLine($"[DbContextFactory] Enqueue succeed, current stored connections: {dbContextQueue.Count}");
                     return true;
                 }
                 else
                 {
+                    Debug.WriteLine($"[DbContextFactory] Enqueue failed, current stored connections: {dbContextQueue.Count}"); 
+                    
                     if (dbContext != null)
                     {
                         dbContext.Database.CloseConnection();
@@ -71,10 +83,12 @@ namespace EFCore.Dal.Utils
 
             if (dbContextQueue.TryDequeue(out MyDbContext output))
             {
+                Debug.WriteLine($"[DbContextFactory] Dequeue succeed, current stored connections: {dbContextQueue.Count}");
                 return output;
             }
             else
             {
+                Debug.WriteLine($"[DbContextFactory] Dequeue failed, current stored connections: {dbContextQueue.Count}");
                 var connStr = ConnectionStrings[dbName];
                 var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
                 optionsBuilder.UseNpgsql(connStr);

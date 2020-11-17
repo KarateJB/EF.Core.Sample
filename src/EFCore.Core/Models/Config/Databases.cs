@@ -8,6 +8,6 @@
         /// <summary>
         /// A database for Demo
         /// </summary>
-        public string Demo = "Demo";
+        public static string Demo = "Demo";
     }
 }
