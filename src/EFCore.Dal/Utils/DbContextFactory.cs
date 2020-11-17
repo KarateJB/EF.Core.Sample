@@ -89,10 +89,15 @@ namespace EFCore.Dal.Utils
             else
             {
                 Debug.WriteLine($"[DbContextFactory] Dequeue failed, current stored connections: {dbContextQueue.Count}");
+
+                // Create new DB context
                 var connStr = ConnectionStrings[dbName];
                 var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
                 optionsBuilder.UseNpgsql(connStr);
-                return new MyDbContext(optionsBuilder.Options);
+                var newDbContext = new MyDbContext(optionsBuilder.Options);
+                // newDbContext.ChangeTracker.AutoDetectChangesEnabled = false; // Optional
+
+                return newDbContext;
             }
         }
     }
