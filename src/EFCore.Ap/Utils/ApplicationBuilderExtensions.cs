@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EFCore.Core.Models;
-using EFCore.Core.Utils;
 using EFCore.Dal.Utils;
 using Microsoft.AspNetCore.Builder;
 
@@ -11,13 +10,17 @@ namespace EFCore.Ap.Utils
         /// <summary>
         /// Configure DbContext factory
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="options"></param>
+        /// <param name="app">IApplicationBuilder</param>
+        /// <param name="options">AppSettings</param>
         public static void ConfigureDbContextFactory(this IApplicationBuilder app, AppSettings options)
         {
             var connStrs = new Dictionary<string, string>();
-            connStrs.Add(ConstFactory.DbConetextName, options.ConnectionStrings.DB);
-            DbContextFactory.SetConnectionString(connStrs);
+            connStrs.Add(Databases.Demo, options.ConnectionStrings.Demo);
+
+            // Add more connection strings here ...
+
+            // Initialize the DbContextFactory
+            DbContextFactory.Setup(connStrs, maxConnections: options.DbContextFactory.MaxConnections);
         }
     }
 }

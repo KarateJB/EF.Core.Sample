@@ -14,6 +14,11 @@ namespace EFCore.Core.Models
         /// ConnectionStrings
         /// </summary>
         public ConnectionStringOptions ConnectionStrings { get; set; }
+
+        /// <summary>
+        /// DB context factory
+        /// </summary>
+        public DbContextFactoryOptions DbContextFactory  { get; set; }
     }
 
     /// <summary>
@@ -24,6 +29,17 @@ namespace EFCore.Core.Models
         /// <summary>
         /// Database's connection string
         /// </summary>
-        public string DB { get; set; }
+        public string Demo { get; set; }
+    }
+    
+    /// <summary>
+    /// DB context factory options
+    /// </summary>
+    public class DbContextFactoryOptions 
+    {
+        /// <summary>
+        /// Max connections
+        /// </summary>
+        public int MaxConnections { get; set; } = 10;
     }
 }

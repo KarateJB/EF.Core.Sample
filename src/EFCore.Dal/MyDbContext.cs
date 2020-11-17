@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using EFCore.Core.Models;
-using EFCore.Core.Utils;
 using EFCore.Dal.Models;
 using EFCore.Dal.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -95,10 +94,10 @@ namespace EFCore.Dal
 
         private byte[] EncryptMe(string text)
         {
-            // You can use DbContextFactory to create the new DbContext as well
-            // var dbContext = DbContextFactory.Create(ConstFactory.DbConetextName);
+            // using (var dbContext = new MyDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
 
-            using (var dbContext = new MyDbContext(this.getOptionBuilder().Options))
+            var dbContext = DbContextFactory.Dequeue(Databases.Demo);
+
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -111,16 +110,21 @@ namespace EFCore.Dal
                 }
 
                 var encrypted = (byte[])command.ExecuteScalar();
+
+                // Try to enqueue the DbConext to reuse the connection.
+                DbContextFactory.Enqueue(dbContext);
+
                 return encrypted;
             }
         }
 
         private string DecryptMe(byte[] cipher)
         {
-            // You can use DbContextFactory to create the new DbContext as well
-            // var dbContext = DbContextFactory.Create(ConstFactory.DbConetextName);
 
-            using (var dbContext = new MyDbContext(this.getOptionBuilder().Options))
+            // using (var dbContext = new MyDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
+
+            var dbContext = DbContextFactory.Dequeue(Databases.Demo);
+
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -133,13 +137,16 @@ namespace EFCore.Dal
                 }
 
                 var decrypted = (string)command.ExecuteScalar();
+
+                // Try to enqueue the DbContext to reuse connection.
+                DbContextFactory.Enqueue(dbContext);
                 return decrypted;
             }
         }
 
         private DbContextOptionsBuilder<MyDbContext> getOptionBuilder()
         {
-            var connectionString = this.appSettings.ConnectionStrings.DB;
+            var connectionString = this.appSettings.ConnectionStrings.Demo;
             var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
             return optionsBuilder;
