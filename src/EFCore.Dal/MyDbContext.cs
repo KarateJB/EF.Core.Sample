@@ -139,7 +139,7 @@ namespace EFCore.Dal
 
         private DbContextOptionsBuilder<MyDbContext> getOptionBuilder()
         {
-            var connectionString = this.appSettings.ConnectionStrings.DB;
+            var connectionString = this.appSettings.ConnectionStrings.Demo;
             var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
             return optionsBuilder;
