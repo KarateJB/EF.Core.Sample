@@ -40,7 +40,7 @@ namespace EFCore.Ap
             services.Configure<AppSettings>(this.Configuration);
 
             // Inject Entity framework DAL services
-            services.AddEntityFrameworkNpgsql().AddDbContext<PgDbContext>(
+            services.AddDbContext<PgDbContext>(
                 options => options.UseNpgsql(this.appSettings.ConnectionStrings.Demo_PG, optionsAction =>
                 {
                     optionsAction.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);

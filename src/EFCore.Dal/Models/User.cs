@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFCore.Dal.Models
 {
-    [Table("Users")]
+    [Table("Users",Schema = "public")]
     public class User
     {
         [Key]
