@@ -101,56 +101,47 @@ namespace EFCore.Dal
 
         private byte[] EncryptMe(string text)
         {
-            // using (var dbContext = new PgDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
+            var dbContext = DbContextFactory.Dequeue(Databases.Demo) ?? new PgDbContext(this.getOptionBuilder().Options);
+            using var command = dbContext.Database.GetDbConnection().CreateCommand();
 
-            var dbContext = DbContextFactory.Dequeue(Databases.Demo);
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "my_sym_encrypt";
 
-            using (var command = dbContext.Database.GetDbConnection().CreateCommand())
+            command.Parameters.Add(
+                new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Text) { Value = text });
+
+            if (command.Connection.State == ConnectionState.Closed)
             {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "my_sym_encrypt";
-
-                command.Parameters.Add(
-                    new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Text) { Value = text });
-
-                if (command.Connection.State == ConnectionState.Closed)
-                {
-                    command.Connection.Open();
-                }
-
-                var encrypted = (byte[])command.ExecuteScalar();
-
-                // Try to enqueue the DbConext to reuse the connection.
-                DbContextFactory.Enqueue(dbContext);
-
-                return encrypted;
+                command.Connection.Open();
             }
+
+            var encrypted = (byte[])command.ExecuteScalar();
+
+            // Try to enqueue the DbConext to reuse the connection.
+            DbContextFactory.Enqueue(dbContext);
+
+            return encrypted;
         }
 
         private string DecryptMe(byte[] cipher)
         {
+            var dbContext = DbContextFactory.Dequeue(Databases.Demo) ?? new PgDbContext(this.getOptionBuilder().Options);
+            using var command = dbContext.Database.GetDbConnection().CreateCommand();
 
-            // using (var dbContext = new PgDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
-
-            var dbContext = DbContextFactory.Dequeue(Databases.Demo);
-
-            using (var command = dbContext.Database.GetDbConnection().CreateCommand())
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "my_sym_decrypt";
+            command.Parameters.Add(
+                new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Bytea) { Value = cipher });
+            if (command.Connection.State == ConnectionState.Closed)
             {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "my_sym_decrypt";
-                command.Parameters.Add(
-                    new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Bytea) { Value = cipher });
-                if (command.Connection.State == ConnectionState.Closed)
-                {
-                    command.Connection.Open();
-                }
-
-                var decrypted = (string)command.ExecuteScalar();
-
-                // Try to enqueue the DbContext to reuse connection.
-                DbContextFactory.Enqueue(dbContext);
-                return decrypted;
+                command.Connection.Open();
             }
+
+            var decrypted = (string)command.ExecuteScalar();
+
+            // Try to enqueue the DbContext to reuse connection.
+            DbContextFactory.Enqueue(dbContext);
+            return decrypted;
         }
 
         private DbContextOptionsBuilder<PgDbContext> getOptionBuilder()
