@@ -13,7 +13,7 @@ namespace EFCore.Dal.Utils
     public static class DbContextFactory
     {
         private static readonly object enqueueLock = new object();
-        private static ConcurrentQueue<MyDbContext> dbContextQueue = null;
+        private static ConcurrentQueue<PgDbContext> dbContextQueue = null;
 
         public static int MaxConnections { get; private set; } = 0; // Max preserved connections
         public static Dictionary<string, string> ConnectionStrings { get; private set; } // Connection string store
@@ -23,7 +23,7 @@ namespace EFCore.Dal.Utils
         /// </summary>
         static DbContextFactory()
         {
-            dbContextQueue = new ConcurrentQueue<MyDbContext>();
+            dbContextQueue = new ConcurrentQueue<PgDbContext>();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace EFCore.Dal.Utils
         /// </summary>
         /// <param name="dbContext">DB context</param>
         /// <returns>True(Enqueue successfully)/False(Exceeds the max connection and the connection will be disposed)</returns>
-        public static bool Enqueue(MyDbContext dbContext)
+        public static bool Enqueue(PgDbContext dbContext)
         {
             lock (enqueueLock)
             {
@@ -74,14 +74,14 @@ namespace EFCore.Dal.Utils
         /// </summary>
         /// <param name="db">Database</param>
         /// <returns>DB context</returns>
-        public static MyDbContext Dequeue(string dbName)
+        public static PgDbContext Dequeue(string dbName)
         {
             if (string.IsNullOrEmpty(dbName) || !ConnectionStrings.ContainsKey(dbName))
             {
                 throw new ArgumentOutOfRangeException($"{dbName} does not have the connection string in {nameof(DbContextFactory)}");
             }
 
-            if (dbContextQueue.TryDequeue(out MyDbContext output))
+            if (dbContextQueue.TryDequeue(out PgDbContext output))
             {
                 Debug.WriteLine($"[DbContextFactory] Dequeue succeed, current stored connections: {dbContextQueue.Count}");
                 return output;
@@ -92,9 +92,9 @@ namespace EFCore.Dal.Utils
 
                 // Create new DB context
                 var connStr = ConnectionStrings[dbName];
-                var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+                var optionsBuilder = new DbContextOptionsBuilder<PgDbContext>();
                 optionsBuilder.UseNpgsql(connStr);
-                var newDbContext = new MyDbContext(optionsBuilder.Options);
+                var newDbContext = new PgDbContext(optionsBuilder.Options);
                 // newDbContext.ChangeTracker.AutoDetectChangesEnabled = false; // Optional
 
                 return newDbContext;

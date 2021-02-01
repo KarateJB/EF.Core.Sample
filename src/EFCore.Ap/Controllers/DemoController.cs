@@ -13,8 +13,8 @@ namespace EFCore.Ap.Controllers
     [Route("[controller]")]
     public class DemoController : ControllerBase
     {
-        private readonly MyDbContext dbcontext = null;
-        public DemoController(MyDbContext dbcontext, IOptions<AppSettings> configuration)
+        private readonly PgDbContext dbcontext = null;
+        public DemoController(PgDbContext dbcontext, IOptions<AppSettings> configuration)
         {
             this.dbcontext = dbcontext;
         }
@@ -23,7 +23,7 @@ namespace EFCore.Ap.Controllers
         public async Task<IActionResult> SignIn([FromBody] ApiUser user)
         {
             var matchedUser =
-                this.dbcontext.Set<User>().FirstOrDefault(x => x.Name.Equals(user.Name) && MyDbContext.DbHashMatch(user.Password, x.Password));
+                this.dbcontext.Set<User>().FirstOrDefault(x => x.Name.Equals(user.Name) && PgDbContext.DbHashMatch(user.Password, x.Password));
             if (matchedUser != null)
                 return this.Ok();
             else
@@ -39,7 +39,7 @@ namespace EFCore.Ap.Controllers
                     Name = x.Name,
                     Phone = x.Phone,
                     CardNo = x.CardNo,
-                    Secret = MyDbContext.DbSymDecrypt(x.Secret)
+                    Secret = PgDbContext.DbSymDecrypt(x.Secret)
                 }).FirstOrDefault();
         }
 
@@ -52,7 +52,7 @@ namespace EFCore.Ap.Controllers
                 Password = user.Password,
                 Phone = user.Phone,
                 CardNo = user.CardNo,
-                Secret = MyDbContext.DbSymEncrypt("some secret")
+                Secret = PgDbContext.DbSymEncrypt("some secret")
             }).First());
             await this.dbcontext.SaveChangesAsync();
             return this.Ok();

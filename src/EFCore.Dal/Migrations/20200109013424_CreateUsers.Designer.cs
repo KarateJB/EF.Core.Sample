@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EFCore.Dal.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(PgDbContext))]
     [Migration("20200109013424_CreateUsers")]
     partial class CreateUsers
     {
