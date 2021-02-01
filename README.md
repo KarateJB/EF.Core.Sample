@@ -6,28 +6,28 @@
 
 ```s
 $ cd src/EFCore.Ap
-$ dotnet ef  --project ../EFCore.Dal --startup-project . migrations add InitCreate
+$ dotnet ef  --project ../EFCore.Dal --startup-project . migrations add InitCreate [--context PgDbContext]
 ```
 
 2. Update database
 
 ```s
 $ cd src/EFCore.Ap
-$ dotnet ef  --project ../EFCore.Dal --startup-project . database update
+$ dotnet ef  --project ../EFCore.Dal --startup-project . database update [--context PgDbContext]
 ```
 
 ## Revert migration
 
 ```s
 $ cd src/EFCore.Ap
-$ dotnet ef  --project ../EFCore.Dal --startup-project . database update <last_migration_name>
+$ dotnet ef  --project ../EFCore.Dal --startup-project . database update <last_migration_name> [--context PgDbContext]
 ```
 
 ## Migrate DB container
 
 ```s
 $ cd "src/EFCore.Ap"
-$ dotnet ef --project "../efcore.dal" --startup-project . migrations script --idempotent --output "../../build/migration.sql"
+$ dotnet ef --project "../efcore.dal" --startup-project . migrations script --idempotent [--context PgDbContext] --output "../../build/migration.sql"
 ```
 
 

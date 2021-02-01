@@ -27,9 +27,14 @@ namespace EFCore.Core.Models
     public class ConnectionStringOptions
     {
         /// <summary>
-        /// Database's connection string
+        /// PostgreSQL's connection string
         /// </summary>
-        public string Demo { get; set; }
+        public string Demo_PG { get; set; }
+
+        /// <summary>
+        /// MS SQL Server's connetion string
+        /// </summary>
+        public string Demo_MSSQL { get; set; }
     }
     
     /// <summary>

@@ -15,7 +15,7 @@ namespace EFCore.Ap.Utils
         public static void ConfigureDbContextFactory(this IApplicationBuilder app, AppSettings options)
         {
             var connStrs = new Dictionary<string, string>();
-            connStrs.Add(Databases.Demo, options.ConnectionStrings.Demo);
+            connStrs.Add(Databases.Demo, options.ConnectionStrings.Demo_PG);
 
             // Add more connection strings here ...
 

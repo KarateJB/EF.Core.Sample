@@ -8,19 +8,22 @@ using Microsoft.Extensions.Options;
 
 namespace EFCore.Dal
 {
-    public class MyDbContext : DbContext
+    /// <summary>
+    /// PostgreSQL Dbcontext
+    /// </summary>
+    public class PgDbContext : DbContext
     {
-        private readonly DbContextOptions<MyDbContext> options = null;
+        private readonly DbContextOptions<PgDbContext> options = null;
         private readonly AppSettings appSettings = null;
 
-        public MyDbContext(
-            DbContextOptions<MyDbContext> options) : base(options)
+        public PgDbContext(
+            DbContextOptions<PgDbContext> options) : base(options)
         {
             this.options = options;
         }
 
-        public MyDbContext(
-            DbContextOptions<MyDbContext> options,
+        public PgDbContext(
+            DbContextOptions<PgDbContext> options,
              IOptions<AppSettings> configuration) : base(options)
         {
             this.options = options;
@@ -75,13 +78,14 @@ namespace EFCore.Dal
             // You can use DbContextFactory to create the new DbContext as well
             // var dbContext = DbContextFactory.Create(ConstFactory.DbConetextName);
 
-            using (var dbContext = new MyDbContext(this.getOptionBuilder().Options))
+            using (var dbContext = new PgDbContext(this.getOptionBuilder().Options))
             using (var command = dbContext.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "my_hash";
-                command.Parameters.Add(new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Text)
-                { Value = text });
+
+                command.Parameters.Add(new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Text) { Value = text });
+
                 if (command.Connection.State == ConnectionState.Closed)
                 {
                     command.Connection.Open();
@@ -94,7 +98,7 @@ namespace EFCore.Dal
 
         private byte[] EncryptMe(string text)
         {
-            // using (var dbContext = new MyDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
+            // using (var dbContext = new PgDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
 
             var dbContext = DbContextFactory.Dequeue(Databases.Demo);
 
@@ -102,8 +106,10 @@ namespace EFCore.Dal
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "my_sym_encrypt";
+
                 command.Parameters.Add(
                     new Npgsql.NpgsqlParameter("t", NpgsqlTypes.NpgsqlDbType.Text) { Value = text });
+
                 if (command.Connection.State == ConnectionState.Closed)
                 {
                     command.Connection.Open();
@@ -121,7 +127,7 @@ namespace EFCore.Dal
         private string DecryptMe(byte[] cipher)
         {
 
-            // using (var dbContext = new MyDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
+            // using (var dbContext = new PgDbContext(this.getOptionBuilder().Options)) // Since every record will run this function to encrypt, the DbContext will be created repeatly.
 
             var dbContext = DbContextFactory.Dequeue(Databases.Demo);
 
@@ -144,10 +150,10 @@ namespace EFCore.Dal
             }
         }
 
-        private DbContextOptionsBuilder<MyDbContext> getOptionBuilder()
+        private DbContextOptionsBuilder<PgDbContext> getOptionBuilder()
         {
-            var connectionString = this.appSettings.ConnectionStrings.Demo;
-            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+            var connectionString = this.appSettings.ConnectionStrings.Demo_PG;
+            var optionsBuilder = new DbContextOptionsBuilder<PgDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
             return optionsBuilder;
         }
