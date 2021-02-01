@@ -34,8 +34,6 @@ namespace EFCore.Dal
 
         public DbSet<SysMetadata> SysMetadatas{ get; set; }
 
-        public DbSet<MapStatus> MapStatuses { get; set; }
-
         #region Functions
         [DbFunction(Name = "my_hash", Schema = "public")]
         public static string DbHash(string t) => throw new NotImplementedException();
@@ -57,7 +55,8 @@ namespace EFCore.Dal
 
             // Specify schema by Fluent API
             // modelBuilder.Entity<SysMetadata>().ToTable("SysMetadatas", "system");
-            // modelBuilder.Entity<MapStatus>().ToTable("MapStatuses", "system");
+
+            //modelBuilder.Entity<User>().Property(p => p.MetadataId).IsRequired(false);
 
             // Hash Password
             modelBuilder.Entity<User>().Property(p => p.Password).HasConversion(

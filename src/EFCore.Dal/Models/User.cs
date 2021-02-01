@@ -26,9 +26,9 @@ namespace EFCore.Dal.Models
         [Column(TypeName = "bytea")]
         public byte[] Secret { get; set; } // This column wont apply Value Conversions
 
-        public int MetadataId { get; set; }
+        public Guid? MetadataId { get; set; }
 
         [ForeignKey("MetadataId")]
-        public SysMetadata Metadata { get; set; }
+        public virtual SysMetadata Metadata { get; set; }
     }
 }
