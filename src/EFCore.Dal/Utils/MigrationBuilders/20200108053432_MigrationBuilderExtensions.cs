@@ -7,7 +7,7 @@ namespace EFCore.Dal.Utils.MigrationBuilders
     /// <summary>
     /// MigrationBuilder extensions
     /// </summary>
-    public static partial class MigrationBuilderExtensions
+    public static partial class PgMigrationBuilderExtensions
     {
         /// <summary>
         /// Create DB functions
@@ -21,17 +21,17 @@ namespace EFCore.Dal.Utils.MigrationBuilders
             var script = string.Empty;
 
             // Create Extension
-            path = Path.Combine(AppContext.BaseDirectory, RootDirName, datetimeDirName, "01.create_extension.sql");
+            path = Path.Combine(AppContext.BaseDirectory, RootDirName, SubDirName, datetimeDirName, "01.create_extension.sql");
             script = ReadMigrationSql(path);
             migrationBuilder.Sql(script);
 
             // Create Schema and store secret
-            path = Path.Combine(AppContext.BaseDirectory, RootDirName, datetimeDirName, "02.store_secret.sql");
+            path = Path.Combine(AppContext.BaseDirectory, RootDirName, SubDirName, datetimeDirName, "02.store_secret.sql");
             script = ReadMigrationSql(path);
             migrationBuilder.Sql(script);
 
             // Create functions
-            path = Path.Combine(AppContext.BaseDirectory, RootDirName, datetimeDirName, "03.create_functions.sql");
+            path = Path.Combine(AppContext.BaseDirectory, RootDirName, SubDirName, datetimeDirName, "03.create_functions.sql");
             script = ReadMigrationSql(path);
             migrationBuilder.Sql(script);
         }

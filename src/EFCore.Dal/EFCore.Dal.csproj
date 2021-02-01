@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -16,13 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Sqls\20200108053432\01.create_extension.sql">
+    <None Update="Sqls\Postgres\20200108053432\01.create_extension.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sqls\20200108053432\02.store_secret.sql">
+    <None Update="Sqls\Postgres\20200108053432\02.store_secret.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sqls\20200108053432\03.create_functions.sql">
+    <None Update="Sqls\Postgres\20200108053432\03.create_functions.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

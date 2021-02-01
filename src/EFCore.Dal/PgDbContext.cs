@@ -48,6 +48,9 @@ namespace EFCore.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Set default schema
+            modelBuilder.HasDefaultSchema("public");
+
             // Hash Password
             modelBuilder.Entity<User>().Property(p => p.Password).HasConversion(
                 val => this.HashIt(val),
