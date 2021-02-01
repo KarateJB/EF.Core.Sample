@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -12,17 +12,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Sqls\Postgres\20200108053432\01.create_extension.sql">
+    <None Update="Sqls\Postgres\20200108053432\06.create_functions_down.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sqls\Postgres\20200108053432\02.store_secret.sql">
+    <None Update="Sqls\Postgres\20200108053432\05.store_secret_down.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sqls\Postgres\20200108053432\03.create_functions.sql">
+    <None Update="Sqls\Postgres\20200108053432\04.create_extension_down.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sqls\Postgres\20200108053432\01.create_extension_up.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sqls\Postgres\20200108053432\02.store_secret_up.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sqls\Postgres\20200108053432\03.create_functions_up.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

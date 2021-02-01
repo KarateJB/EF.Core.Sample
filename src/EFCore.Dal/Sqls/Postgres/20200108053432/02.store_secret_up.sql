@@ -15,6 +15,7 @@ END IF;
 END
 $schema$;
 
+
 DO $table$
 BEGIN
 
@@ -34,22 +35,31 @@ END IF;
 END
 $table$;
 
-DO $user$
-BEGIN
 
-IF NOT EXISTS(
-		SELECT "rolname" FROM pg_roles WHERE rolname='sa'
-    )
-THEN
-	/* Create sa and grant permissions */
-	CREATE USER sa WITH PASSWORD '12qwaszx';
-	GRANT CONNECT ON DATABASE "MiniTis" TO sa;
-	--GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA system TO sa;
-	GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA system TO sa;
-	--ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA system REVOKE ALL ON TABLES FROM postgres;
-END IF;
-END
-$user$;
+/* (Optional) Create user */
+--DO $user$
+--BEGIN
+
+--IF NOT EXISTS(
+--		SELECT "rolname" FROM pg_roles WHERE rolname='my_user'
+--    )
+--THEN
+--	/* Create sa and grant permissions */
+--	CREATE USER my_user WITH PASSWORD 'xxxxxxx';
+--	GRANT CONNECT ON DATABASE "postgres" TO my_user;
+--	--GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA system TO sa;
+--	GRANT ALL ON schema system TO my_user;
+--	GRANT ALL PRIVILEGES ON ALL tables IN SCHEMA system TO my_user;
+--	GRANT ALL PRIVILEGES ON ALL sequences IN SCHEMA system TO my_user;
+--	GRANT ALL PRIVILEGES ON ALL functions IN SCHEMA system TO my_user;
+--	ALTER DEFAULT PRIVILEGES IN SCHEMA system GRANT ALL ON tables to my_user;
+--	ALTER DEFAULT PRIVILEGES IN SCHEMA system GRANT ALL ON sequences to my_user;
+--	ALTER DEFAULT PRIVILEGES IN SCHEMA system GRANT ALL ON functions to my_user;
+--	--ALTER DEFAULT PRIVILEGES FOR USER postgres IN SCHEMA system REVOKE ALL ON TABLES FROM postgres;
+--END IF;
+--END
+--$user$;
+
 
 DO $secret$
 BEGIN
