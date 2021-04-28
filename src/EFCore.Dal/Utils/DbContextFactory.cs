@@ -54,8 +54,8 @@ namespace EFCore.Dal.Utils
                 }
                 else
                 {
-                    Debug.WriteLine($"[DbContextFactory] Enqueue failed, current stored connections: {dbContextQueue.Count}"); 
-                    
+                    Debug.WriteLine($"[DbContextFactory] Enqueue failed, current stored connections: {dbContextQueue.Count}");
+
                     if (dbContext != null)
                     {
                         dbContext.Database.CloseConnection();
@@ -76,9 +76,16 @@ namespace EFCore.Dal.Utils
         /// <returns>DB context</returns>
         public static PgDbContext Dequeue(string dbName)
         {
-            if (string.IsNullOrEmpty(dbName) || !ConnectionStrings.ContainsKey(dbName))
+            if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentOutOfRangeException($"{dbName} does not have the connection string in {nameof(DbContextFactory)}");
+                throw new ArgumentNullException("dbName");
+            }
+
+            if (ConnectionStrings == null || !ConnectionStrings.ContainsKey(dbName))
+            {
+                // Warning log
+                //Debug.WriteLine($"{dbName} does not have the connection string in {nameof(DbContextFactory)}");
+                return null;
             }
 
             if (dbContextQueue.TryDequeue(out PgDbContext output))

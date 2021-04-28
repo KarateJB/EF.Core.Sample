@@ -8,13 +8,13 @@ namespace EFCore.Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             #region Custom migrate sqls
-            migrationBuilder.CreatePgCryptoFunctions_20200108053432();
+            migrationBuilder.CreatePgCryptoFunctions_20200108053432_Up();
             #endregion
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.CreatePgCryptoFunctions_20200108053432_Down();
         }
     }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EFCore.Dal.Models
 {
-    [Table("Users")]
+    [Table("Users",Schema = "public")]
     public class User
     {
         [Key]
@@ -25,5 +25,10 @@ namespace EFCore.Dal.Models
 
         [Column(TypeName = "bytea")]
         public byte[] Secret { get; set; } // This column wont apply Value Conversions
+
+        public Guid? MetadataId { get; set; }
+
+        [ForeignKey("MetadataId")]
+        public virtual SysMetadata Metadata { get; set; }
     }
 }

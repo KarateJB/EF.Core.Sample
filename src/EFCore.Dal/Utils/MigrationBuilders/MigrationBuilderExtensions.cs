@@ -5,9 +5,10 @@ namespace EFCore.Dal.Utils.MigrationBuilders
     /// <summary>
     /// MigrationBuilder extensions
     /// </summary>
-    public static partial class MigrationBuilderExtensions
+    public static partial class PgMigrationBuilderExtensions
     {
         private const string RootDirName = "Sqls";
+        private const string SubDirName = "Postgres"; 
         private static string datetimeDirName = string.Empty;
 
         /// <summary>

@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Ap.Models;
 using EFCore.Core.Models;
 using EFCore.Dal;
 using EFCore.Dal.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace EFCore.Ap.Controllers
@@ -33,13 +35,14 @@ namespace EFCore.Ap.Controllers
         [HttpGet("GetUser/{name}")]
         public async Task<ApiUserInfo> GetUser([FromRoute] string name)
         {
-            return this.dbcontext.Set<User>().Where(x => x.Name.Equals(name)).Select(x=>
+            return this.dbcontext.Set<User>().Include(u => u.Metadata).Where(x => x.Name.Equals(name)).Select(x =>
                 new ApiUserInfo
-                 { 
+                {
                     Name = x.Name,
                     Phone = x.Phone,
                     CardNo = x.CardNo,
-                    Secret = PgDbContext.DbSymDecrypt(x.Secret)
+                    Secret = PgDbContext.DbSymDecrypt(x.Secret),
+                    Metadata = x.Metadata
                 }).FirstOrDefault();
         }
 
@@ -52,7 +55,12 @@ namespace EFCore.Ap.Controllers
                 Password = user.Password,
                 Phone = user.Phone,
                 CardNo = user.CardNo,
-                Secret = PgDbContext.DbSymEncrypt("some secret")
+                Secret = PgDbContext.DbSymEncrypt("some secret"),
+                Metadata = new SysMetadata
+                {
+                    CreateBy = "Admin",
+                    CreateOn = DateTimeOffset.UtcNow
+                }
             }).First());
             await this.dbcontext.SaveChangesAsync();
             return this.Ok();
